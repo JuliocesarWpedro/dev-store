@@ -6,7 +6,11 @@ import { Product } from '@/data/types/products';
 
 async function getFeaturedProducts(): Promise<Product[]> {
   try {
-    const response = await api('/products/featured');
+    const response = await api('/products/featured', {
+      next: {
+        revalidate: 60 * 60,
+      },
+    });
     if (!response.ok) {
       throw new Error(`Erro na requisição: ${response.statusText}`);
     }
