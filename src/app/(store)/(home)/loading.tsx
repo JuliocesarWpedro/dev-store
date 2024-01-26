@@ -1,7 +1,14 @@
+import Skeleton from '@/components/skeleton';
 import React from 'react';
 
 const loading = () => {
-  return <div>Carregando ...</div>;
+  return (
+    <div className="grid h-full grid-cols-9 grid-rows-6 gap-6">
+      <Skeleton className="col-span-6 row-span-6 h-[857px]" />
+      <Skeleton className="col-span-3 row-span-3 " />
+      <Skeleton className="col-span-3 row-span-3 " />
+    </div>
+  );
 };
 
 export default loading;
