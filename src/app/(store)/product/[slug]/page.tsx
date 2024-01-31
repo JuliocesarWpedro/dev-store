@@ -3,6 +3,7 @@ import Image from 'next/image';
 import { Product } from '@/data/types/products';
 import { api } from '@/data/api';
 import { Metadata } from 'next';
+import AddToCartButton from '@/components/add-to-cart-button';
 
 interface ProductProps {
   params: {
@@ -80,7 +81,7 @@ const page = async ({ params }: ProductProps) => {
             })}
           </span>
           <span className="text-sm text-zinc-400">
-            Em 12x sem juros de{' '}
+            Em até 12x sem juros de{' '}
             {(product.price / 12).toLocaleString('pt-BR', {
               style: 'currency',
               currency: 'BRL',
@@ -116,12 +117,7 @@ const page = async ({ params }: ProductProps) => {
             </button>
           </div>
         </div>
-        <button
-          type="button"
-          className="mt-8 flex h-12 items-center justify-center rounded-full bg-emerald-600 font-semibold text-white px-5"
-        >
-          Adicionar ao carrinho
-        </button>
+       <AddToCartButton productId={product.id}/>
       </div>
     </div>
   );
