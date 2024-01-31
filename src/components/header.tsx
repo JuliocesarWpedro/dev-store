@@ -1,8 +1,8 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import React from 'react';
-import { Search, ShoppingBag } from 'lucide-react';
-
+import { Search } from 'lucide-react';
+import CartWidget from './cart-widget';
 const Header = () => {
   return (
     <header className="flex items-center justify-between bsm:flex-col bsm:gap-3">
@@ -20,10 +20,7 @@ const Header = () => {
         </form>
       </div>
       <div className="flex items-center gap-4 md:flex-col md:items-end bsm:flex-row bsm:items-center">
-        <div className="flex items-center gap-2">
-          <ShoppingBag className="h-4 w-4" />
-          <span className="text-sm">Cart (0)</span>
-        </div>
+       <CartWidget />
         <div className="w-px h-4 bg-zinc-700 md:hidden bsm:block" />
         <div className="flex gap-5 align-center md:gap-1 md:text-sm bsm:gap-5">
           <Link href="/" className="flex items-center gap-2 hover:underline">
