@@ -1,7 +1,7 @@
 'use client';
-
-import Skeleton from '@/components/skeleton';
 import { useSearchParams } from 'next/navigation';
+import React from 'react';
+import Skeleton from '../../../components/skeleton';
 
 const Loading = () => {
   const searchParams = useSearchParams();
