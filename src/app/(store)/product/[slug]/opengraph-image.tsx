@@ -1,6 +1,7 @@
 import { api } from '@/data/api';
 import { Product } from '@/data/types/products';
 import { ImageResponse } from 'next/server';
+import Image from 'next/image';
 import { zinc } from 'tailwindcss/colors';
 import { env } from 'process';
 
@@ -51,7 +52,7 @@ export default async function OgImage({
           flexDirection: 'column',
         }}
       >
-        <img src={productImageUrl} alt="" style={{ width: '100%' }} />
+        <Image src={productImageUrl} alt="" style={{ width: '100%' }} />
       </div>
     ),
     {
