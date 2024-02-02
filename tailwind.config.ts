@@ -11,6 +11,9 @@ const config: Config = {
       fontFamily: {
         sans: 'var(--font-inter)',
       },
+      gridTemplateColumns: {
+        "important": '1fr !important',
+      },
       gridTemplateRows: {
         app: 'min-content max-content',
       },
