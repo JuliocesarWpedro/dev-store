@@ -1,7 +1,6 @@
 export function api(path: string, init?: RequestInit) {
-  const baseUrl = process.env.API_URL || 'http://localhost:3000';
   const apiPrefix = '/api';
-  const url = new URL(apiPrefix.concat(path), baseUrl);
+  const url = `http://127.0.0.1:3000${apiPrefix}${path}`;
 
   return fetch(url, init);
 }
