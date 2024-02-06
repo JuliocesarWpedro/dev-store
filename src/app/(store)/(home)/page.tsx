@@ -1,12 +1,13 @@
-import React from 'react';
-import Link from 'next/link';
-import Image from 'next/image';
 import { api } from '@/data/api';
 import { Product } from '@/data/types/products';
 import { Metadata } from 'next';
+import Link from 'next/link';
+import Image from 'next/image';
 
 async function getFeaturedProducts(): Promise<Product[]> {
   try {
+    if (!process.env.NEXT_PUBLIC_BASE_API_URL)
+      throw new Error(`Erro na requisição`);
     const response = await api('/products/featured', {
       next: {
         revalidate: 60 * 60,
@@ -30,7 +31,6 @@ export const metadata: Metadata = {
 
 const Home = async () => {
   const [hightlightedProduct, ...otherProducts] = await getFeaturedProducts();
-
   return (
     <div className="grid max-h-[860px] grid-cols-9 grid-rows-6 gap-6">
       <Link

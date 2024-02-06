@@ -1,10 +1,7 @@
-import React from 'react';
-import Image from 'next/image';
-import { Product } from '@/data/types/products';
 import { api } from '@/data/api';
-import { Metadata } from 'next';
+import { Product } from '@/data/types/products';
 import AddToCartButton from '@/components/add-to-cart-button';
-
+import Image from 'next/image';
 interface ProductProps {
   params: {
     slug: string;
@@ -13,11 +10,16 @@ interface ProductProps {
 
 async function getProduct(slug: string): Promise<Product> {
   try {
+    if (!process.env.NEXT_PUBLIC_BASE_API_URL) {
+      throw new Error(`Erro na requisição`);
+    }
+
     const response = await api(`/products/${slug}`, {
       next: {
         revalidate: 60 * 60,
       },
     });
+
     if (!response.ok) {
       throw new Error(`Erro na requisição: ${response.statusText}`);
     }
@@ -28,27 +30,6 @@ async function getProduct(slug: string): Promise<Product> {
     console.error('Erro ao buscar produtos:', error);
     throw error;
   }
-}
-
-export async function generateMetadata({
-  params,
-}: ProductProps): Promise<Metadata> {
-  const product = await getProduct(params.slug);
-
-  return {
-    title: product.title,
-  };
-}
-
-export async function generateStaticParams() {
-  const response = await api('/products/featured');
-  const products: Product[] = await response.json();
-
-  return products.map((product) => {
-    return {
-      slug: product.slug,
-    };
-  });
 }
 
 const page = async ({ params }: ProductProps) => {
@@ -117,7 +98,7 @@ const page = async ({ params }: ProductProps) => {
             </button>
           </div>
         </div>
-       <AddToCartButton productId={product.id}/>
+        <AddToCartButton productId={product.id} />
       </div>
     </div>
   );

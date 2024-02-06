@@ -5,13 +5,19 @@ export async function GET(
   _: Request,
   { params }: { params: { slug: string } },
 ) {
-  await new Promise((resolve) => setTimeout(resolve, 1000));
-  const slug = z.string().parse(params.slug);
+  await new Promise((resolve) => setTimeout(resolve, 1000)); // Simula um atraso de 1 segundo (opcional)
 
-  const product = data.products.find((product) => product.slug === slug);
-  if (!product) {
-    return Response.json({ message: 'Product not found' }, { status: 400 });
+  try {
+    const slug = z.string().parse(params.slug);
+
+    const product = data.products.find((product) => product.slug === slug);
+    if (!product) {
+      return Response.json({ message: 'Product not found' }, { status: 400 });
+    }
+
+    return Response.json(product);
+  } catch (error) {
+    console.error('Erro ao analisar o parâmetro slug:', error);
+    return Response.json({ message: 'Erro ao analisar o parâmetro slug' }, { status: 500 });
   }
-
-  return Response.json(product);
 }

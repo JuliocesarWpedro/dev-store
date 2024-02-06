@@ -1,8 +1,8 @@
-import Image from 'next/image';
-import { redirect } from 'next/navigation';
-import { Product } from '@/data/types/products';
 import { api } from '@/data/api';
+import { Product } from '@/data/types/products';
+import Image from 'next/image';
 import Link from 'next/link';
+import { redirect } from 'next/navigation';
 
 interface SearchProps {
   searchParams: {
@@ -11,6 +11,8 @@ interface SearchProps {
 }
 
 async function searchProducts(query: string): Promise<Product[]> {
+  if (!process.env.NEXT_PUBLIC_BASE_API_URL)
+  throw new Error(`Erro na requisição`);
   const response = await api(`/products/search?q=${query}`, {
     next: {
       revalidate: 60 * 60, // 1 hour
