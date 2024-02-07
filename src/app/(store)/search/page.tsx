@@ -42,7 +42,7 @@ const Page = ({ searchParams }: SearchProps) => {
   }, [query]);
 
   return (
-    <div>
+    <>
       {productsSearched && (
         <div className="flex flex-col gap-4 ">
           <p className="text-sm">
@@ -79,7 +79,7 @@ const Page = ({ searchParams }: SearchProps) => {
           </div>
         </div>
       )}
-    </div>
+    </>
   );
 };
 
