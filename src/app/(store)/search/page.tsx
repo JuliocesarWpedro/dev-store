@@ -1,46 +1,63 @@
-import { api } from '@/data/api';
+'use client';
 import { Product } from '@/data/types/products';
 import Image from 'next/image';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
-
+import React from 'react';
 interface SearchProps {
   searchParams: {
     q: string;
   };
 }
 
-async function searchProducts(query: string): Promise<Product[]> {
-  if (!process.env.NEXT_PUBLIC_BASE_API_URL)
-  throw new Error(`Erro na requisição`);
-  const response = await api(`/products/search?q=${query}`, {
+function searchProducts(query: string): Promise<Product[]> {
+  return fetch(`/api/products/search?q=${query}`, {
     next: {
       revalidate: 60 * 60, // 1 hour
     },
-  });
-
-  const products = await response.json();
-
-  return products;
+  })
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error(`Erro na requisição: ${response.statusText}`);
+      }
+      return response.json();
+    })
+    .catch((error) => {
+      console.error('Erro ao buscar produtos:', error);
+      throw error;
+    });
 }
 
-const page = async ({ searchParams }: SearchProps) => {
+const Page = ({ searchParams }: SearchProps) => {
   const { q: query } = searchParams;
+  const [productsSearched, setProductsSearched] = React.useState<
+    Product[] | null
+  >(null);
 
-  if (!query) {
-    redirect('/');
+  React.useEffect(() => {
+    if (!query) {
+      redirect('/');
+      return;
+    }
+
+    searchProducts(query)
+      .then((result) => setProductsSearched(result))
+      .catch((error) => {
+        console.error('Erro ao buscar produtos:', error);
+      });
+  }, [query]);
+
+  if (!productsSearched) {
+    return <div>Produto não encontrado</div>;
   }
-
-  const products = await searchProducts(query);
-
   return (
     <div className="flex flex-col gap-4 ">
       <p className="text-sm">
         Resultados para: <span className="font-semibold">{query}</span>
       </p>
       <div className="grid grid-cols-3 gap-6 slg:grid-cols-2 md:grid-cols-important">
-        {products &&
-          products.map((product) => {
+        {productsSearched &&
+          productsSearched.map((product) => {
             return (
               <Link
                 key={product.id}
@@ -74,4 +91,4 @@ const page = async ({ searchParams }: SearchProps) => {
   );
 };
 
-export default page;
+export default Page;
