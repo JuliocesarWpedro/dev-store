@@ -3,6 +3,7 @@ import { Product } from '@/data/types/products';
 import Image from 'next/image';
 import Link from 'next/link';
 import React from 'react';
+import { useSearchParams } from 'next/navigation';
 interface SearchProps {
   searchParams: {
     q: string;
@@ -27,8 +28,9 @@ function searchProducts(query: string): Promise<Product[]> {
     });
 }
 
-const Page = ({ searchParams }: SearchProps) => {
-  const { q: query } = searchParams;
+const Page = () => {
+  const searchParams = useSearchParams();
+  const query = searchParams.get('q');
   const [productsSearched, setProductsSearched] = React.useState<
     Product[] | null
   >(null);
@@ -50,6 +52,7 @@ const Page = ({ searchParams }: SearchProps) => {
             setErrorProductNotFound(true);
             setProductsSearched([]);
           }
+        } else {
         }
       } catch (error) {
         console.error('Erro na requisição:', error);
