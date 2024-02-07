@@ -36,19 +36,28 @@ const Page = ({ searchParams }: SearchProps) => {
     React.useState<boolean>(false);
 
   React.useEffect(() => {
+    console.log('query:', query);
     const fetchData = () => {
       setErrorProductNotFound(false);
-      searchProducts(query)
-        .then((result) => {
-          if (result.length) {
-            setProductsSearched(result);
-          } else {
+      if (query) {
+        console.log('existe a pesquisa');
+        searchProducts(query)
+          .then((result) => {
+            if (result.length) {
+              console.log('result:', result);
+              setProductsSearched(result);
+            } else {
+              console.log('tem query mas não achou o produto');
+              setErrorProductNotFound(true);
+            }
+          })
+          .catch(() => {
+            console.log('erro na requisição');
             setErrorProductNotFound(true);
-          }
-        })
-        .catch(() => {
-          setErrorProductNotFound(true);
-        });
+          });
+      } else {
+        console.log('não tem query');
+      }
     };
     fetchData();
   }, [query]);
