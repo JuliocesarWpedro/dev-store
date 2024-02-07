@@ -46,6 +46,10 @@ const Page = ({ params }: ProductProps) => {
     fetchData();
   }, [params.slug]);
 
+  if (!product) {
+    return <div>Carregando...</div>;
+  }
+
   return (
     <div>
       {product && (

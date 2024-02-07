@@ -29,12 +29,16 @@ const Home = () => {
   const [otherProducts, setOtherProducts] = React.useState<Product[]>([]);
 
   React.useEffect(() => {
-    getFeaturedProducts()
-      .then((products) => {
-        setHighlightedProduct(products[0]);
-        setOtherProducts(products.slice(1, 3));
-      })
-      .catch((error) => console.error('Erro ao buscar produtos:', error));
+    const fetchData = () => {
+      getFeaturedProducts()
+        .then((products) => {
+          setHighlightedProduct(products[0]);
+          setOtherProducts(products.slice(1, 3));
+        })
+        .catch((error) => console.error('Erro ao buscar produtos:', error));
+    };
+
+    fetchData();
   }, []);
 
   if (!hightlightedProduct) {

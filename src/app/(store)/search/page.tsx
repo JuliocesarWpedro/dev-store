@@ -32,14 +32,34 @@ const Page = ({ searchParams }: SearchProps) => {
   const [productsSearched, setProductsSearched] = React.useState<
     Product[] | null
   >(null);
+  const [errorProductNotFound, setErrorProductNotFound] =
+    React.useState<boolean>(false);
 
   React.useEffect(() => {
-    searchProducts(query)
-      .then((result) => setProductsSearched(result))
-      .catch((error) => {
-        console.error('Erro ao buscar produtos:', error);
-      });
+    const fetchData = () => {
+      setErrorProductNotFound(false);
+      searchProducts(query)
+        .then((result) => {
+          if (result.length) {
+            setProductsSearched(result);
+          } else {
+            setErrorProductNotFound(true);
+          }
+        })
+        .catch(() => {
+          setErrorProductNotFound(true);
+        });
+    };
+    fetchData();
   }, [query]);
+
+  if (errorProductNotFound) {
+    return <div>O produto não foi encontrado</div>;
+  }
+
+  if (errorProductNotFound === false && productsSearched === null) {
+    return <div>Carregando...</div>;
+  }
 
   return (
     <>
