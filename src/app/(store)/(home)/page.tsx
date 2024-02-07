@@ -1,36 +1,50 @@
-import { api } from '@/data/api';
+'use client';
+
+import React from 'react';
 import { Product } from '@/data/types/products';
 import { Metadata } from 'next';
 import Link from 'next/link';
 import Image from 'next/image';
 
-async function getFeaturedProducts(): Promise<Product[]> {
-  try {
-    if (!process.env.NEXT_PUBLIC_BASE_API_URL)
-      throw new Error(`Erro na requisição`);
-    const response = await api('/products/featured', {
-      next: {
-        revalidate: 60 * 60,
-      },
+function getFeaturedProducts(): Promise<Product[]> {
+  return fetch('/api/products/featured', {
+    method: 'GET',
+    next: {
+      revalidate: 60 * 60,
+    },
+  })
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error(`Erro na requisição: ${response.statusText}`);
+      }
+      return response.json();
+    })
+    .catch((error) => {
+      console.error('Erro ao buscar produtos:', error);
+      throw error;
     });
-    if (!response.ok) {
-      throw new Error(`Erro na requisição: ${response.statusText}`);
-    }
-
-    const products = await response.json();
-    return products;
-  } catch (error) {
-    console.error('Erro ao buscar produtos:', error);
-    throw error;
-  }
 }
-
 export const metadata: Metadata = {
   title: 'Home',
 };
 
-const Home = async () => {
-  const [hightlightedProduct, ...otherProducts] = await getFeaturedProducts();
+const Home = () => {
+  const [hightlightedProduct, setHighlightedProduct] =
+    React.useState<Product | null>(null);
+  const [otherProducts, setOtherProducts] = React.useState<Product[]>([]);
+
+  React.useEffect(() => {
+    getFeaturedProducts()
+      .then((products) => {
+        setHighlightedProduct(products[0]);
+        setOtherProducts(products.slice(1, 3));
+      })
+      .catch((error) => console.error('Erro ao buscar produtos:', error));
+  }, []);
+
+  if (!hightlightedProduct) {
+    return <div>Carregando...</div>;
+  }
   return (
     <div className="grid max-h-[860px] grid-cols-9 grid-rows-6 gap-6">
       <Link
