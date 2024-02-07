@@ -34,31 +34,30 @@ const Page = ({ searchParams }: SearchProps) => {
   >(null);
   const [errorProductNotFound, setErrorProductNotFound] =
     React.useState<boolean>(false);
+  const [loading, setLoading] = React.useState<boolean>(true);
 
   React.useEffect(() => {
-    console.log('query:', query);
-    const fetchData = () => {
+    const fetchData = async () => {
       setErrorProductNotFound(false);
-      if (query) {
-        console.log('existe a pesquisa');
-        searchProducts(query)
-          .then((result) => {
-            if (result.length) {
-              console.log('result:', result);
-              setProductsSearched(result);
-            } else {
-              console.log('tem query mas não achou o produto');
-              setErrorProductNotFound(true);
-            }
-          })
-          .catch(() => {
-            console.log('erro na requisição');
+      setLoading(true);
+      try {
+        if (query) {
+          const result = await searchProducts(query);
+          if (result.length) {
+            setProductsSearched(result);
+          } else {
             setErrorProductNotFound(true);
-          });
-      } else {
-        console.log('não tem query');
+            setProductsSearched([]);
+          }
+        }
+      } catch (error) {
+        console.error('Erro na requisição:', error);
+        setErrorProductNotFound(true);
+      } finally {
+        setLoading(false);
       }
     };
+
     fetchData();
   }, [query]);
 
@@ -66,7 +65,7 @@ const Page = ({ searchParams }: SearchProps) => {
     return <div>O produto não foi encontrado</div>;
   }
 
-  if (errorProductNotFound === false && productsSearched === null) {
+  if (productsSearched === null || productsSearched.length === 0) {
     return <div>Carregando...</div>;
   }
 
