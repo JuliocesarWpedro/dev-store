@@ -34,10 +34,6 @@ const Page = ({ searchParams }: SearchProps) => {
   >(null);
 
   React.useEffect(() => {
-    if (!query) {
-      return;
-    }
-
     searchProducts(query)
       .then((result) => setProductsSearched(result))
       .catch((error) => {
@@ -45,18 +41,15 @@ const Page = ({ searchParams }: SearchProps) => {
       });
   }, [query]);
 
-  if (!productsSearched) {
-    return <div>Produto não encontrado</div>;
-  }
   return (
-    <div className="flex flex-col gap-4 ">
-      <p className="text-sm">
-        Resultados para: <span className="font-semibold">{query}</span>
-      </p>
-      <div className="grid grid-cols-3 gap-6 slg:grid-cols-2 md:grid-cols-important">
-        {productsSearched &&
-          productsSearched.map((product) => {
-            return (
+    <div>
+      {productsSearched && (
+        <div className="flex flex-col gap-4 ">
+          <p className="text-sm">
+            Resultados para: <span className="font-semibold">{query}</span>
+          </p>
+          <div className="grid grid-cols-3 gap-6 slg:grid-cols-2 md:grid-cols-important">
+            {productsSearched.map((product) => (
               <Link
                 key={product.id}
                 href={`/product/${product.slug}`}
@@ -82,9 +75,10 @@ const Page = ({ searchParams }: SearchProps) => {
                   </span>
                 </div>
               </Link>
-            );
-          })}
-      </div>
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   );
 };
