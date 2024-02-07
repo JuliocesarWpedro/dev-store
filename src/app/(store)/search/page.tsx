@@ -2,7 +2,6 @@
 import { Product } from '@/data/types/products';
 import Image from 'next/image';
 import Link from 'next/link';
-import { redirect } from 'next/navigation';
 import React from 'react';
 interface SearchProps {
   searchParams: {
@@ -36,7 +35,6 @@ const Page = ({ searchParams }: SearchProps) => {
 
   React.useEffect(() => {
     if (!query) {
-      redirect('/');
       return;
     }
 
