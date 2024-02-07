@@ -1,8 +1,6 @@
 'use client';
-
 import React from 'react';
 import { Product } from '@/data/types/products';
-import { Metadata } from 'next';
 import Link from 'next/link';
 import Image from 'next/image';
 
@@ -24,9 +22,6 @@ function getFeaturedProducts(): Promise<Product[]> {
       throw error;
     });
 }
-export const metadata: Metadata = {
-  title: 'Home',
-};
 
 const Home = () => {
   const [hightlightedProduct, setHighlightedProduct] =
