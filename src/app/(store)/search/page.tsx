@@ -45,6 +45,7 @@ const Page = ({ searchParams }: SearchProps) => {
           const result = await searchProducts(query);
           if (result.length) {
             setProductsSearched(result);
+            setLoading(false);
           } else {
             setErrorProductNotFound(true);
             setProductsSearched([]);
@@ -61,12 +62,12 @@ const Page = ({ searchParams }: SearchProps) => {
     fetchData();
   }, [query]);
 
-  if (errorProductNotFound) {
-    return <div>O produto não foi encontrado</div>;
+  if (loading) {
+    return <div>Carregando...</div>;
   }
 
-  if (productsSearched === null || productsSearched.length === 0) {
-    return <div>Carregando...</div>;
+  if (errorProductNotFound) {
+    return <div>O produto não foi encontrado</div>;
   }
 
   return (
